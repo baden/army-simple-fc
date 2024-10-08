@@ -1,0 +1,5 @@
+.DS_Store
+*-bak
+board/*/*-backups/*.zip
+board/*/fp-info-cache
+*.lck
