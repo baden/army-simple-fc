@@ -1,11 +1,35 @@
 ## Планую розробити власний контролер автопілота та польотний контролер.
 
 
+Вибір процесору:
+
+
+STM32F030CCT6TR - LQFP-48 (0.5мм)
+https://kosmodrom.ua/mikrokontroler/stm32f030cct6.html
+47,5грн
+
+
+STM32G070CBT6 - LQFP-48 (0.5мм)
+https://kosmodrom.ua/mikrokontroler/stm32g070cbt6.html
+47,5грн
+
+
+Якшо треба більш компактну:
+STM32G070KBT6 - LQFP-32 (0.8мм) - це буде простіше припаяти.
+https://kosmodrom.ua/mikrokontroler/stm32g070kbt6.html
+
+
+
 ### Різні посилання
 
+- https://habr.com/ru/articles/731514/ - Про керування VTX
+- https://www.team-blacksheep.com/media/files/tbs_smartaudio_rev09.pdf
+- https://betaflight.com/docs/wiki/guides/current/smartaudio
 - https://github.com/EonClaw/STM32F411-Blackpill-INAV-FixedWing
 - https://github.com/iNavFlight/OpenTX-Telemetry-Widget
-# dc-motor-driver-adapter
+- https://github.com/SolidGeek/VescUart
+
+# army-simple-fc
 
 Тут буде і плата і програма.
 

@@ -2,8 +2,9 @@
 
 # https://github.com/snhobbs/kicad-make/blob/0256edc46bfc10a185658dce7bf5963997f3f1dc/Makefile#L10
 
-NAME=dc-motor-driver-adapter
-REVISION=revision-2
+# NAME=army-simple-fc
+NAME=army-simple-fc
+REVISION=revision-1
 DIST=dist/$REVISION
 
 BOARD=board/$REVISION/$NAME.kicad_pcb

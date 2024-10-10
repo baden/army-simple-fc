@@ -9,7 +9,7 @@
 
 # Files and Folders
 MAINFILE = src/main.c
-TARGET   = dc-motor-driver-adapter
+TARGET   = army-simple-fc
 INCLUDE  = include
 TOOLS    = tools
 
