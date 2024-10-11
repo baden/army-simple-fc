@@ -6957,7 +6957,7 @@
 		(uuid "00a09d88-ada6-4222-8fd7-af123069859e")
 	)
 	(label "UART1.RX"
-		(at 64.77 102.87 180)
+		(at 63.5 140.97 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6979,7 +6979,7 @@
 		(uuid "090e230b-2d65-48f4-8a49-908c395e0caf")
 	)
 	(label "UART3.TX"
-		(at 63.5 138.43 180)
+		(at 64.77 100.33 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7276,7 +7276,7 @@
 		(uuid "78d12843-f11a-4f62-afe0-f7cb018940b2")
 	)
 	(label "UART3.RX"
-		(at 63.5 140.97 180)
+		(at 64.77 102.87 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7309,7 +7309,7 @@
 		(uuid "8737cf87-fea0-4c36-8bc7-e08dfee91e56")
 	)
 	(label "UART1.TX"
-		(at 64.77 100.33 180)
+		(at 63.5 138.43 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
