@@ -15,7 +15,7 @@ rm -rf $DIST/*
 # Gerbers: Top, Bottom, Paste (top only), Mask, Edge
 mkdir -p $DIST/gerbers
 kicad-cli pcb export gerbers \
-    --subtract-soldermask --no-x2 --layers "F.Cu,B.Cu,Edge.Cuts,F.Paste,F.Mask,B.Mask,B.Silkscreen" \
+    --subtract-soldermask --no-x2 --layers "F.Cu,B.Cu,Edge.Cuts,F.Paste,F.Mask,B.Mask,F.Silkscreen,B.Silkscreen" \
     -o $DIST/gerbers $BOARD
 
 # Drill files: Drill, Drill map
@@ -81,7 +81,7 @@ rm $DIST/assembly/$NAME-Top.svg
 
 # rm $DIST/assembly/$NAME-Bottom.svg
 
-cp board/docs/$NAME.png $DIST/assembly/$NAME.png
+cp board/$REVISION/docs/$NAME.png $DIST/assembly/$NAME.png
 
 zip -rj $DIST/$NAME-assembly.zip $DIST/assembly/*
 rm -rf $DIST/assembly
