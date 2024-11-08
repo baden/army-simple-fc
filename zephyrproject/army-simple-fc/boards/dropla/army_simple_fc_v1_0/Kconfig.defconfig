@@ -1,0 +1,11 @@
+# STM32 Nucleo-64 development board with STM32G070RB MCU
+
+# Copyright (c) 2023 Marin Jurjević <marin.jurjevic@hotmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_ARMY_SIMPLE_FC
+
+config BOARD
+	default "army_simple_fc_v1_0"
+
+endif # BOARD_ARMY_SIMPLE_FC

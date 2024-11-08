@@ -3,3 +3,7 @@
 board/*/*-backups/*.zip
 board/*/fp-info-cache
 *.lck
+.venv
+.pio
+zephyrproject/build*
+zephyrproject/army-simple-fc/build

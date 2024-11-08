@@ -1,6 +1,49 @@
 ## Планую розробити власний контролер автопілота та польотний контролер.
 
 
+
+
+
+
+# По ПО.
+
+## Налаштування робочого оточення
+
+Я використовую (коли згадую) оце: [uv](https://github.com/astral-sh/uv)
+Але зі звичайним python/pip це працює точнісенько так само.
+
+```
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install west
+west init -m https://github.com/baden/fxa-custom-zephyr --mr main zephyrproject
+cd zephyrproject
+west update
+west zephyr-export
+uv pip install -r zephyr/scripts/requirements.txt
+```
+
+Напевно ще треба зробити 
+
+```
+cd zephyr
+west sdk install
+```
+
+але я поки не хочу, бо це довго і багато буде качати
+
+Пробуємо шось зібрати
+
+```
+west build -p always -b nucleo_g070rb zephyr/samples/basic/blinky -d build-blinky
+```
+
+Сука, воно знов зависає на 
+
+Found GnuLd: /Users/baden/.local/opt/zephyr-sdk-0.16.4/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/bin/ld.bfd (found version "2.38")
+
+## Подальша інформація не актуальна
+
 Вибір процесору:
 
 

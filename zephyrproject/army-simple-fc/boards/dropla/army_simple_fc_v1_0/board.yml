@@ -1,0 +1,5 @@
+board:
+  name: army_simple_fc_v1_0
+  vendor: dropla
+  socs:
+    - name: stm32g070
