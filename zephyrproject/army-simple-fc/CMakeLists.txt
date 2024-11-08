@@ -1,11 +1,22 @@
-# Copyright (c) 2021 Nordic Semiconductor ASA
 # SPDX-License-Identifier: Apache-2.0
-#
-# This CMake file is picked by the Zephyr build system because it is defined
-# as the module CMake entry point (see zephyr/module.yml).
 
-#zephyr_include_directories(include)
-#zephyr_include_directories(.)
+cmake_minimum_required(VERSION 3.20.0)
 
-#add_subdirectory(drivers)
-#add_subdirectory(lib)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+#set(BOARD army_simple_fc_v1_0)
+
+#list(APPEND ZEPHYR_EXTRA_MODULES
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../modules/zephyr-atmodem
+#)
+
+find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
+
+project(army_simple_fc LANGUAGES C)
+
+#add_subdirectory(src)
+#include_directories(include)
+target_sources(app PRIVATE src/main.c)
+
+
+zephyr_cc_option(-Wfatal-errors)

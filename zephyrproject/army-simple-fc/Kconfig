@@ -1,9 +1,22 @@
-# Copyright (c) 2021 Nordic Semiconductor ASA
-# SPDX-License-Identifier: Apache-2.0
-#
-# This Kconfig file is picked by the Zephyr build system because it is defined
-# as the module Kconfig entry point (see zephyr/module.yml). You can browse
-# module options by going to Zephyr -> Modules in Kconfig.
+#menu "Zephyr"
+#source "Kconfig.zephyr"
+#endmenu
 
-#rsource "drivers/Kconfig"
-#rsource "lib/Kconfig"
+
+#rsource "src/io/Kconfig"
+#rsource "src/lte/Kconfig"
+
+
+#module = APP
+#module-str = APP
+#source "subsys/logging/Kconfig.template.log_config"
+
+#DT_CHOSEN_BOOT_PARTITION := zephyr,boot-partition
+#
+#config BOOTLOADER_OFFSET
+#    hex "Bootloader offset"
+#    default $(dt_chosen_reg_addr_hex,$(DT_CHOSEN_BOOT_PARTITION))
+#
+#config BOOTLOADER_SIZE
+#    hex "Bootloader size"
+#    default $(dt_chosen_reg_size_hex,$(DT_CHOSEN_BOOT_PARTITION))

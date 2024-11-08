@@ -16,6 +16,30 @@
 uv venv --python 3.12
 source .venv/bin/activate
 uv pip install west
+
+cd zephyrproject
+west init -l army-simple-fc
+west update
+uv pip install -r zephyr/scripts/requirements.txt
+#west config --global zephyr.base-prefer configfile
+west zephyr-export
+west build -s army-simple-fc -p -b army_simple_fc_v1_0
+
+```
+
+Збірка
+
+```
+west build -s army-simple-fc -p -b army_simple_fc_v1_0
+```
+
+
+Це вже не актуально:
+
+```
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install west
 west init -m https://github.com/baden/fxa-custom-zephyr --mr main zephyrproject
 cd zephyrproject
 west update

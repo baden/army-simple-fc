@@ -7,3 +7,16 @@ board/*/fp-info-cache
 .pio
 zephyrproject/build*
 zephyrproject/army-simple-fc/build
+
+zephyrproject/.west
+zephyrproject/bootloader
+zephyrproject/modules
+zephyrproject/tools
+zephyrproject/zephyr
+zephyrproject/build
+zephyrproject/*.DS_Store
+zephyrproject/__pycache__
+zephyrproject/.python-version
+zephyrproject/.venv
+zephyrproject/.direnv
+board/revision-1/_autosave-army-simple-fc.kicad_sch
