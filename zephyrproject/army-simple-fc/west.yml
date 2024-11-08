@@ -20,6 +20,28 @@ manifest:
       remote: zephyrproject-rtos
       # revision: main
       revision: v3.7.0
+      clone-depth: 1
+
+      import:
+        name-blocklist:
+          - ci-tools
+          - hal_altera
+          - hal_cypress
+          - hal_infineon
+          - hal_microchip
+          - hal_nxp
+          - hal_openisa
+          - hal_silabs
+          - hal_xtensa
+          - hal_ti
+          - loramac-node
+          - mcuboot
+          - mcumgr
+          - net-tools
+          - openthread
+          - edtt
+          - trusted-firmware-m
+
       # revision: 52fd66b
       # import:
       #   # By using name-allowlist we can clone only the modules that are
