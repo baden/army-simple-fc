@@ -1,4 +1,7 @@
-#include "crsf.h"
+#include "Crsf.h"
 
-void rxParseByte(uint8_t c) {
-}
+CrsfSerial::CrsfSerial(HardwareSerial &port, uint32_t baud) :
+    _port(port), _crc(0xd5), _baud(baud),
+    _lastReceive(0), _lastChannelsPacket(0), _linkIsUp(false),
+    _passthroughBaud(0)
+{}
