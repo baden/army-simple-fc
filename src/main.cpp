@@ -61,54 +61,50 @@ HardwareSerial VtxSerial(USART4, HALF_DUPLEX_ENABLED);
 
 enum beeper_state {
     BEEPER_STATE_OFF,
-    BEEPER_STATE_SHORT_SIGNAL,
-    BEEPER_STATE_SHORT_PAUSE,
-    // BEEPER_STATE_LONG_SIGNAL,
-    // BEEPER_STATE_LONG_PAUSE,
+    BEEPER_STATE_SIGNAL,
+    BEEPER_STATE_PAUSE,
 };
 
 #define BEEPER_SHORT_SIGNAL_DURATION 100
-#define BEEPER_SHORT_PAUSE_DURATION 300
-#define BEEPER_LONG_SIGNAL_DURATION 500
+#define BEEPER_SHORT_PAUSE_DURATION 150
+#define BEEPER_LONG_SIGNAL_DURATION 1000
 #define BEEPER_LONG_PAUSE_DURATION 500
 
 #define TASK_PERIOD_MS 100
 
 unsigned beeper_signals = 0;
 unsigned beeper_state = BEEPER_STATE_OFF;
-int beeper_timer = 0;
+unsigned beeper_timer = 0;
+unsigned beeper_signal_duration = BEEPER_SHORT_SIGNAL_DURATION;
+unsigned beeper_pause_duration = BEEPER_SHORT_PAUSE_DURATION;
 
-// 100ms beeper task
+// Beeper task
 void beeper_task() {
     switch (beeper_state)
     {
     case BEEPER_STATE_OFF:
         digitalWrite(beeper_pin, LOW);
         break;
-    case BEEPER_STATE_SHORT_SIGNAL:
-        if(beeper_timer <= 0) {
-            beeper_state = BEEPER_STATE_SHORT_PAUSE;
+    case BEEPER_STATE_SIGNAL:
+        if(millis() - beeper_timer >= beeper_signal_duration) {
+            beeper_state = BEEPER_STATE_PAUSE;
             digitalWrite(beeper_pin, LOW);
-            beeper_timer = BEEPER_SHORT_PAUSE_DURATION;
+            beeper_timer = millis();
         } else {
             digitalWrite(beeper_pin, HIGH);
-            beeper_timer -= TASK_PERIOD_MS;
         }
         break;
-    case BEEPER_STATE_SHORT_PAUSE:
-        if(beeper_timer <= 0) {
+    case BEEPER_STATE_PAUSE:
+        if(millis() - beeper_timer >= beeper_pause_duration) {
             beeper_signals--;
             if(beeper_signals == 0) {
                 beeper_state = BEEPER_STATE_OFF;
                 digitalWrite(beeper_pin, LOW);
             } else {
-                beeper_state = BEEPER_STATE_SHORT_SIGNAL;
+                beeper_state = BEEPER_STATE_SIGNAL;
                 digitalWrite(beeper_pin, HIGH);
-                beeper_timer = BEEPER_SHORT_SIGNAL_DURATION;
+                beeper_timer = millis();
             }
-        } else {
-            digitalWrite(beeper_pin, LOW);
-            beeper_timer -= TASK_PERIOD_MS;
         }
         break;
     
@@ -117,10 +113,23 @@ void beeper_task() {
     }
 }
 
-void beeper_signal(unsigned signals) {
+void beeper_start_signal(unsigned signals) {
     beeper_signals = signals;
-    beeper_state = BEEPER_STATE_SHORT_SIGNAL;
-    beeper_timer = BEEPER_SHORT_SIGNAL_DURATION;
+    beeper_state = BEEPER_STATE_SIGNAL;
+    beeper_timer = millis();
+    digitalWrite(beeper_pin, HIGH);
+}
+
+void beeper_short_signals(unsigned signals) {
+    beeper_signal_duration = BEEPER_SHORT_SIGNAL_DURATION;
+    beeper_pause_duration = BEEPER_SHORT_PAUSE_DURATION;
+    beeper_start_signal(signals);
+}
+
+void beeper_long_signals(unsigned signals) {
+    beeper_signal_duration = BEEPER_LONG_SIGNAL_DURATION;
+    beeper_pause_duration = BEEPER_LONG_PAUSE_DURATION;
+    beeper_start_signal(signals);
 }
 
 void setup() {
@@ -165,7 +174,8 @@ void setup() {
     pinMode(beeper_pin, OUTPUT);
     digitalWrite(beeper_pin, LOW);
 
-    beeper_signal(1);       // При подачі живлення сигнал один раз
+    delay(1000);
+    beeper_short_signals(1);       // При подачі живлення сигнал один раз
 }
 
 unsigned long currentMillis = 0;
@@ -183,12 +193,7 @@ void loop() {
     static bool armed_flag = false;
 
     crsf.update();
-    // while(Serial3.available()) {
-    //     char c = Serial3.read();
-    //     rxParseByte(c);
-    //     rc_counter++;
-    //     // Serial2.write(c);
-    // }
+    beeper_task();
 
     if(millis() - currentMillis > TASK_PERIOD_MS) {
         currentMillis = millis();
@@ -201,7 +206,7 @@ void loop() {
                 // Serial2.println("Link is up");
                 rc_link = true;
                 // Короткий звуковий сигнал
-                beeper_signal(1);
+                beeper_short_signals(1);
             }
 
             rc_timeout = RC_TIMEOUT_MS;
@@ -222,11 +227,11 @@ void loop() {
             // 
             if(armed && !armed_flag) {
                 // Три сигнали
-                beeper_signal(1);
+                beeper_short_signals(1);
                 armed_flag = true;
             } else if(!armed && armed_flag) {
                 // Два сигнали
-                beeper_signal(2);
+                beeper_short_signals(2);
                 armed_flag = false;
             }
 
@@ -326,7 +331,7 @@ void loop() {
                     rc_timeout_flag = true;
 
                     // Три сигнали
-                    beeper_signal(3);
+                    beeper_short_signals(3);
 
                 }
                 digitalWrite(starter_pin, LOW);
@@ -354,13 +359,12 @@ void loop() {
                     // Затримка 1 секунда
                     delay(1000);
                     digitalWrite(decompressor_pin, LOW);
-                    // 4 звукових сигнали
-                    beeper_signal(4);
+                    // 3 довгих звукових сигнали
+                    beeper_long_signals(3);
                 }
             }
         }
 
-        beeper_task();
 
         #if 0
         if(crsf.isLinkUp()) {
@@ -377,19 +381,56 @@ void loop() {
         Serial2.println(" ");
         #endif
 
-        static int simulate_battery_voltage = 40;
-        static int simulate_battery_remaining = 25;
+
+        // Подільник напруги на вході 1
+        // R1=78.7 кОм  R2=4.7 кОм
+        // Подільник напруги на вході 2
+        // R1=40.7 кОм  R2=4.7 кОм
+        #define ADC1_R1 78700
+        #define ADC1_R2 4700
+        #define ADC2_R1 40700
+        #define ADC2_R2 4700
+
+        // Опорна напруга 3.3В (помножимо на 10, шоб отримати volt x10)
+        #define VREF 33UL
+
+        // АЦП 12 біт
+        #define ADC_RESOLUTION 4096
+
+        // Відправимо напругу бортового живлення
+        int adc1 = analogRead(adc1_pin);
+
+        // Преобразуемо в напругу (0.1 вольта) з урахуванням подільника
+        // int adc1_voltage1 = (adc1 * 10 * VREF) / ADC_RESOLUTION;
+        // int battery_voltage = (adc1_voltage1 * (ADC1_R1 + ADC1_R2)) / ADC1_R2; 
+        int battery_voltage_x10 = ((unsigned long)adc1 * VREF * (ADC1_R1 + ADC1_R2)) / ADC1_R2 / ADC_RESOLUTION;
+
+        // Напруга повністю розрядженого акумулятора 3.5В (0%)
+        // Напруга повністю зарядженого акумулятора 4.2В (100%)
+        #define BATTERY_MIN_VOLTAGE 3500
+        #define BATTERY_MAX_VOLTAGE 4200
+
+        int battery_percent = map(battery_voltage_x10, BATTERY_MIN_VOLTAGE*10, BATTERY_MAX_VOLTAGE*10, 0, 100);
+        if(battery_percent < 0) {
+            battery_percent = 0;
+        } else if(battery_percent > 100) {
+            battery_percent = 100;
+        }
+
         crsf_sensor_battery_t crsfBatt = { 0 };
 
-        crsfBatt.voltage = htobe16((uint16_t)(simulate_battery_voltage * 10.0));   //Volts
+        crsfBatt.voltage = htobe16((uint16_t)(battery_voltage_x10));   //Volts x10
         crsfBatt.current = htobe16(10);  //Amps
         crsfBatt.capacity = htobe16(1000);   //mAh
-        crsfBatt.remaining = simulate_battery_remaining; //Percent
+        crsfBatt.remaining = battery_percent; //Percent
         crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_BATTERY_SENSOR, &crsfBatt, sizeof(crsfBatt));
 
-        simulate_battery_remaining = 100 - simulate_battery_remaining;
-
-
+        // Serial2.print(adc1);
+        // Serial2.print(": ");
+        // Serial2.print(battery_voltage_x10);
+        // Serial2.print("mV ");
+        // Serial2.print(battery_percent);
+        // Serial2.println("%");
 
     }
 
