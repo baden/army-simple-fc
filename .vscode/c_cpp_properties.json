@@ -111,6 +111,7 @@
                 "PIN_SERIAL4_TX=PA0",
                 "NDEBUG",
                 "HWSERIAL_NONE",
+                "SERIAL_RX_BUFFER_SIZE=256",
                 "STM32G0xx",
                 "ARDUINO=10808",
                 "ARDUINO_ARCH_STM32",

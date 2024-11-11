@@ -180,6 +180,7 @@ void loop() {
     static bool rc_timeout_flag = true;
     static int rc_driver_timeout = 0;
     static bool rc_driver_timeout_flag = true;
+    static bool armed_flag = false;
 
     crsf.update();
     // while(Serial3.available()) {
@@ -199,8 +200,8 @@ void loop() {
             if(!rc_link) {
                 // Serial2.println("Link is up");
                 rc_link = true;
-                // Два коротких сигнала
-                beeper_signal(2);
+                // Короткий звуковий сигнал
+                beeper_signal(1);
             }
 
             rc_timeout = RC_TIMEOUT_MS;
@@ -218,7 +219,16 @@ void loop() {
             // - газування двигуна
 
             bool armed = crsf.getChannel(5) > 1500;
-            // TODO: Зробити довгий звуковий сигнал
+            // 
+            if(armed && !armed_flag) {
+                // Три сигнали
+                beeper_signal(1);
+                armed_flag = true;
+            } else if(!armed && armed_flag) {
+                // Два сигнали
+                beeper_signal(2);
+                armed_flag = false;
+            }
 
             // Канал 3 - серво для керування газом двигуна
             int acc_value = crsf.getChannel(3);
