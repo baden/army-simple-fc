@@ -174,7 +174,7 @@ void setup() {
     pinMode(beeper_pin, OUTPUT);
     digitalWrite(beeper_pin, LOW);
 
-    delay(1000);
+    delay(50);
     beeper_short_signals(1);       // При подачі живлення сигнал один раз
 }
 
