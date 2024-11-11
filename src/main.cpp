@@ -183,6 +183,14 @@ unsigned long currentMillis = 0;
 #define RC_TIMEOUT_MS 3000
 #define RC_DRIVER_TIMEOUT_MS 60000
 
+
+void nb_delay(unsigned long delay) {
+    unsigned long start = millis();
+    while(millis() - start < delay) {
+        crsf.update();
+    }
+}
+
 void loop() {
     static int rc_counter = 0;
     static bool rc_link = false;
@@ -353,11 +361,11 @@ void loop() {
                     rc_driver_timeout_flag = true;
                     // Скинути газ на мінімум (бажано б якось перевіряти шо двигун працює, а то це буде спрацьовувати завжди)
                     acc_servo.write(0);
-                    delay(3000);
+                    nb_delay(3000);
                     // Видати сигнал 1секунду на декомпресор
                     digitalWrite(decompressor_pin, HIGH);
                     // Затримка 1 секунда
-                    delay(1000);
+                    nb_delay(1000);
                     digitalWrite(decompressor_pin, LOW);
                     // 3 довгих звукових сигнали
                     beeper_long_signals(3);
