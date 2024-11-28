@@ -145,13 +145,13 @@ void setup() {
     crsf.begin(crsfSerial);
 
     // Init motors servos and set to 0
-    motor1_servo.attach(moto1_servo_pin);
+    motor1_servo.attach(moto1_servo_pin, 1000, 2000);
     motor1_servo.write(90);
-    motor2_servo.attach(moto2_servo_pin);
+    motor2_servo.attach(moto2_servo_pin, 1000, 2000);
     motor2_servo.write(90);
-    motor3_servo.attach(moto3_servo_pin);
+    motor3_servo.attach(moto3_servo_pin, 1000, 2000);
     motor3_servo.write(90);
-    motor4_servo.attach(moto4_servo_pin);
+    motor4_servo.attach(moto4_servo_pin, 1000, 2000);
     motor4_servo.write(90);
 
     // Init Winch direction pins
